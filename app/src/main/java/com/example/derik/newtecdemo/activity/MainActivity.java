@@ -20,6 +20,8 @@ import com.example.derik.newtecdemo.R;
 import com.example.derik.newtecdemo.adapter.RecycleViewAdapter;
 import com.orhanobut.logger.Logger;
 
+import javax.inject.Inject;
+
 public class MainActivity extends BaseActivity {
 
     private static final String TAG = "MainActivity";

@@ -13,12 +13,13 @@ import android.view.View;
 import com.example.derik.newtecdemo.R;
 import com.example.derik.newtecdemo.adapter.ItemDividerHorizontal;
 import com.example.derik.newtecdemo.adapter.RecycleViewAdapter;
+import com.example.derik.newtecdemo.utils.OkHttpClientUtils;
 import com.orhanobut.logger.Logger;
 
 import java.io.IOException;
 
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
+import okhttp3.Call;
+import okhttp3.Callback;
 import okhttp3.Response;
 
 public class OkHttpTestActivity extends BaseActivity {
@@ -26,12 +27,8 @@ public class OkHttpTestActivity extends BaseActivity {
     private static final String TAG = "OkHttpTestActivity";
     private Intent targetIntent;
     private String[] targetNames = new String[]{
-            "Storage",
-            "Views",
-            "MultiMedia",
-            "Net",
-            "Natives",
-            "Others",
+            "get",
+            "post"
     };
 
     @Override
@@ -61,19 +58,33 @@ public class OkHttpTestActivity extends BaseActivity {
             public void onItemClick(View view, int position) {
                 switch (position) {
                     case 0:
-                        new Thread(new Runnable() {
+                        OkHttpClientUtils.getClient().get("https://www.baidu.com", new Callback() {
                             @Override
-                            public void run() {
-                                try {
-                                    String result = new MyHttPClient().run("https://raw.github.com/square/okhttp/master/README.md");
-                                    Logger.d(result);
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
+                            public void onFailure(Call call, IOException e) {
+                                Logger.d(call.toString());
                             }
-                        }).start();
+
+                            @Override
+                            public void onResponse(Call call, Response response) throws IOException {
+                                Logger.d(response.body().string());
+                            }
+                        });
+
                         break;
                     case 1:
+                        String json = "{\"username\": \"derik\", \"password\": \"123456\"}";
+                        OkHttpClientUtils.getClient().postJson("https://www.baidu.com", json
+                                , new Callback() {
+                                    @Override
+                                    public void onFailure(Call call, IOException e) {
+                                        Logger.d(call.toString());
+                                    }
+
+                                    @Override
+                                    public void onResponse(Call call, Response response) throws IOException {
+                                        Logger.d(response.body().string());
+                                    }
+                                });
                         break;
                     case 2:
                         break;
@@ -90,17 +101,4 @@ public class OkHttpTestActivity extends BaseActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
-    public class MyHttPClient {
-        OkHttpClient client = new OkHttpClient();
-
-        String run(String url) throws IOException {
-            Request request = new Request.Builder()
-                    .url(url)
-                    .build();
-
-            try (Response response = client.newCall(request).execute()) {
-                return response.body().string();
-            }
-        }
-    }
 }
