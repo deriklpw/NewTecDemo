@@ -8,7 +8,6 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,16 +19,14 @@ import com.example.derik.newtecdemo.R;
 import com.example.derik.newtecdemo.adapter.RecycleViewAdapter;
 import com.orhanobut.logger.Logger;
 
-import javax.inject.Inject;
-
 public class MainActivity extends BaseActivity {
 
     private static final String TAG = "MainActivity";
-    private Intent targetIntent;
-    private ActionBar actionBar;
-    private String[] targetNames = new String[]{
-            "Storage",
-            "Views",
+    private Intent mTargetIntent;
+    private ActionBar mActionBar;
+    private String[] mTargetNames = new String[]{
+            "OkHttp",
+            "Dagger2",
             "MultiMedia",
             "Net",
             "Natives",
@@ -44,16 +41,16 @@ public class MainActivity extends BaseActivity {
         setBackArrow();//设置返回按钮和点击事件
 
         ToggleButton actionBarEnable = (ToggleButton) findViewById(R.id.main_action_bar_toggle);
-        actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
+        mActionBar = getSupportActionBar();
+        mActionBar.setDisplayHomeAsUpEnabled(true);
 
         actionBarEnable.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 if (isChecked) {
-                    actionBar.show();
+                    mActionBar.show();
                 } else {
-                    actionBar.hide();
+                    mActionBar.hide();
                 }
             }
         });
@@ -68,21 +65,24 @@ public class MainActivity extends BaseActivity {
         // 设置为垂直布局，这也是默认的
         layoutManager.setOrientation(OrientationHelper.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
-        recyclerView.addItemDecoration(new ItemDividerHorizontal().setDividerColor(Color.GRAY).setDividerSize(2));
+        recyclerView.addItemDecoration(new ItemDividerHorizontal().setDividerColor(Color.GRAY).setmDividerSize(2));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
-        RecycleViewAdapter adapter = new RecycleViewAdapter(targetNames, null);
+        RecycleViewAdapter adapter = new RecycleViewAdapter(mTargetNames, null);
         recyclerView.setAdapter(adapter);
         adapter.setOnItemClickListener(new RecycleViewAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
                 switch (position) {
                     case 0:
-                        targetIntent = new Intent(getBaseContext(), OkHttpTestActivity.class);
-                        startActivity(targetIntent);
+                        mTargetIntent = new Intent(getBaseContext(), OkHttpTestActivity.class);
+                        startActivity(mTargetIntent);
 
                         break;
                     case 1:
+                        mTargetIntent = new Intent(getBaseContext(), Dagger2Activity.class);
+                        startActivity(mTargetIntent);
+
                         break;
                     case 2:
                         break;

@@ -20,7 +20,7 @@ public class OkHttpClientUtils {
 
     private OkHttpClientUtils() {
         client = new OkHttpClient.Builder()
-                .connectTimeout(10, TimeUnit.SECONDS)
+                .connectTimeout(15, TimeUnit.SECONDS)
                 .build();
     }
 

@@ -14,36 +14,36 @@ import android.widget.TextView;
 
 import com.example.derik.newtecdemo.R;
 
-public class BaseActivity extends AppCompatActivity {
+public abstract class BaseActivity extends AppCompatActivity {
 
     /**
      * 通用的ToolBar标题
      */
-    private TextView commonTitleTv;
+    private TextView mCommonTitleTv;
     /**
      * 通用的ToolBar
      */
-    private Toolbar commonTitleTb;
+    private Toolbar mCommonTitleTb;
     /**
      * 内容区域
      */
-    private RelativeLayout content;
+    private RelativeLayout mContent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_base);
         initView();
-        setSupportActionBar(commonTitleTb);
+        setSupportActionBar(mCommonTitleTb);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
     }
 
     private void initView() {
-        commonTitleTv = (TextView) findViewById(R.id.common_title_tv);
-        commonTitleTb = (Toolbar) findViewById(R.id.common_title_tb);
-        content = (RelativeLayout) findViewById(R.id.content);
+        mCommonTitleTv = (TextView) findViewById(R.id.common_title_tv);
+        mCommonTitleTb = (Toolbar) findViewById(R.id.common_title_tb);
+        mContent = (RelativeLayout) findViewById(R.id.content);
 
-        if (commonTitleTb == null) {
+        if (mCommonTitleTb == null) {
             throw new IllegalStateException(
                     "The subclass of ToolbarActivity must contain a toolbar.");
         }
@@ -57,8 +57,8 @@ public class BaseActivity extends AppCompatActivity {
      */
     public void setToolBar(int layout) {
         hideToolBar();
-        commonTitleTb = (Toolbar) content.findViewById(layout);
-        setSupportActionBar(commonTitleTb);
+        mCommonTitleTb = (Toolbar) mContent.findViewById(layout);
+        setSupportActionBar(mCommonTitleTb);
         //设置actionBar的标题是否显示，对应ActionBar.DISPLAY_SHOW_TITLE。
         getSupportActionBar().setDisplayShowTitleEnabled(false);
     }
@@ -67,8 +67,8 @@ public class BaseActivity extends AppCompatActivity {
      * 隐藏ToolBar，通过setToolBar重新定制ToolBar
      */
     public void hideToolBar() {
-        commonTitleTb.setVisibility(View.GONE);
-        commonTitleTb = null;
+        mCommonTitleTb.setVisibility(View.GONE);
+        mCommonTitleTb = null;
     }
 
     /**
@@ -77,7 +77,7 @@ public class BaseActivity extends AppCompatActivity {
      * @param onclick
      */
     public void setToolBarMenuOnclick(Toolbar.OnMenuItemClickListener onclick) {
-        commonTitleTb.setOnMenuItemClickListener(onclick);
+        mCommonTitleTb.setOnMenuItemClickListener(onclick);
     }
 
 
@@ -91,7 +91,7 @@ public class BaseActivity extends AppCompatActivity {
         // 给左上角图标的左边加上一个返回的图标 。对应ActionBar.DISPLAY_HOME_AS_UP
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         //设置返回按钮的点击事件
-        commonTitleTb.setNavigationOnClickListener(new View.OnClickListener() {
+        mCommonTitleTb.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
@@ -109,7 +109,7 @@ public class BaseActivity extends AppCompatActivity {
         View contentView = inflater.inflate(layoutId, null);
         ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT);
-        content.addView(contentView, params);
+        mContent.addView(contentView, params);
     }
 
     /**
@@ -119,7 +119,7 @@ public class BaseActivity extends AppCompatActivity {
      */
     public void setTitle(String title) {
         if (!TextUtils.isEmpty(title)) {
-            commonTitleTv.setText(title);
+            mCommonTitleTv.setText(title);
         }
     }
 
@@ -129,6 +129,6 @@ public class BaseActivity extends AppCompatActivity {
      * @param resId
      */
     public void setTitle(int resId) {
-        commonTitleTv.setText(resId);
+        mCommonTitleTv.setText(resId);
     }
 }

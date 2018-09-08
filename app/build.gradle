@@ -1,11 +1,13 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 27
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
+
     defaultConfig {
         applicationId "com.example.derik.newtecdemo"
-        minSdkVersion 19
-        targetSdkVersion 27
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -20,15 +22,29 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'com.android.support:appcompat-v7:27.1.1'
-    implementation 'com.android.support:recyclerview-v7:27.1.1'
-    implementation 'com.android.support.constraint:constraint-layout:1.1.2'
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'com.android.support.test:runner:1.0.2'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
-    implementation 'com.squareup.okhttp3:okhttp:3.11.0'
-    testImplementation 'com.squareup.okhttp3:mockwebserver:3.11.0'
-    implementation 'com.orhanobut:logger:1.15'
-    compile"com.google.dagger:dagger:2.14.1"
-    annotationProcessor"com.google.dagger:dagger-compiler:2.14.1"
+
+    implementation "com.android.support:appcompat-v7:$rootProject.ext.supportLibraryVersion"
+    implementation "com.android.support.constraint:constraint-layout:$rootProject.ext.layoutVersion"
+    testImplementation "junit:junit:$rootProject.ext.junitVersion"
+    androidTestImplementation "com.android.support.test:runner:$rootProject.ext.runnerVersion"
+    androidTestImplementation "com.android.support.test.espresso:espresso-core:$rootProject.ext.espressoVersion"
+
+    //support library
+    implementation "com.android.support:recyclerview-v7:$rootProject.ext.supportLibraryVersion"
+
+    //network library
+    implementation "com.squareup.okhttp3:okhttp:$rootProject.ext.okhttpVersion"
+    testImplementation "com.squareup.okhttp3:mockwebserver:$rootProject.ext.okhttpVersion"
+
+    //debug library
+    implementation "com.orhanobut:logger:$rootProject.ext.loggerVersion"
+
+    //annotation library
+    implementation "com.google.dagger:dagger:$rootProject.ext.dagger2Version"
+    annotationProcessor "com.google.dagger:dagger-compiler:$rootProject.ext.dagger2Version"
+
+    // orm library
+//    implementation "android.arch.persistence.room:runtime:1.0.0"
+//    annotationProcessor "android.arch.persistence.room:compiler:1.0.0"
+
 }

@@ -25,8 +25,8 @@ import okhttp3.Response;
 public class OkHttpTestActivity extends BaseActivity {
 
     private static final String TAG = "OkHttpTestActivity";
-    private Intent targetIntent;
-    private String[] targetNames = new String[]{
+    private Intent mTargetIntent;
+    private String[] mTargetNames = new String[]{
             "get",
             "post"
     };
@@ -48,10 +48,10 @@ public class OkHttpTestActivity extends BaseActivity {
         // 设置为垂直布局，这也是默认的
         layoutManager.setOrientation(OrientationHelper.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
-        recyclerView.addItemDecoration(new ItemDividerHorizontal().setDividerColor(Color.GRAY).setDividerSize(2));
+        recyclerView.addItemDecoration(new ItemDividerHorizontal().setDividerColor(Color.GRAY).setmDividerSize(2));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
-        RecycleViewAdapter adapter = new RecycleViewAdapter(targetNames, null);
+        RecycleViewAdapter adapter = new RecycleViewAdapter(mTargetNames, null);
         recyclerView.setAdapter(adapter);
         adapter.setOnItemClickListener(new RecycleViewAdapter.OnItemClickListener() {
             @Override

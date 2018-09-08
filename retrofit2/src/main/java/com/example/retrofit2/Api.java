@@ -1,0 +1,21 @@
+package com.example.retrofit2;
+
+import java.util.Map;
+
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.http.GET;
+import retrofit2.http.POST;
+import retrofit2.http.QueryMap;
+
+/**
+ * Created by derik on 18-9-8.
+ */
+
+public interface Api {
+    @GET("api/data/Android/10/1")
+    Call<ResponseBody> getAndroidInfo();
+
+    @POST("weather/index?")
+    Call<WeatherBean> getWeather(@QueryMap Map<String , String> params);
+}

@@ -13,7 +13,7 @@ import android.view.View;
 
 public class ItemDividerHorizontal extends RecyclerView.ItemDecoration {
 
-    private int dividerSize = 1;
+    private int mDividerSize = 1;
     private Paint mPaint;
 
     public ItemDividerHorizontal() {
@@ -27,8 +27,8 @@ public class ItemDividerHorizontal extends RecyclerView.ItemDecoration {
         mPaint.setColor(Color.GRAY);
     }
 
-    public ItemDividerHorizontal setDividerSize(int dividerSize) {
-        this.dividerSize = dividerSize;
+    public ItemDividerHorizontal setmDividerSize(int mDividerSize) {
+        this.mDividerSize = mDividerSize;
         return this;
     }
 
@@ -40,7 +40,7 @@ public class ItemDividerHorizontal extends RecyclerView.ItemDecoration {
     @Override
     public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
         super.getItemOffsets(outRect, view, parent, state);
-        outRect.bottom = dividerSize;
+        outRect.bottom = mDividerSize;
     }
 
     @Override
@@ -54,7 +54,7 @@ public class ItemDividerHorizontal extends RecyclerView.ItemDecoration {
         for (int i = 0; i < childCount; i++) {
             View view = parent.getChildAt(i);
             float top = view.getBottom();
-            float bottom = view.getBottom() + dividerSize;
+            float bottom = view.getBottom() + mDividerSize;
             c.drawRect(left, top, right, bottom, mPaint);
         }
     }
