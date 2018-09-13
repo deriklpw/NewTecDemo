@@ -1,1 +1,1 @@
-include ':app', ':common', ':dagger2', ':okhttp', ':retrofit2'
+include ':app', ':common', ':dagger2', ':okhttp', ':retrofit2', ':greendao'
