@@ -105,7 +105,7 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseView
      * 设置左上角back按钮
      */
     public void setBackArrow() {
-        final Drawable upArrow = getResources().getDrawable(android.R.drawable.arrow_up_float);
+        final Drawable upArrow = getResources().getDrawable(R.mipmap.ic_arrow_back_white);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar == null) {
             return;

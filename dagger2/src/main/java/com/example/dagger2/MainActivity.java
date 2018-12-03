@@ -2,11 +2,13 @@ package com.example.dagger2;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.Toast;
 
 import com.example.common.activity.BaseActivity;
 import com.example.common.adapter.ItemDividerHorizontal;
@@ -16,7 +18,6 @@ import com.example.dagger2.bean.StudentFactory;
 import com.example.dagger2.bean.User;
 import com.example.dagger2.components.DaggerStudentComponent;
 import com.example.dagger2.components.StudentComponent;
-import com.example.dagger2.module.CourseModule;
 import com.orhanobut.logger.Logger;
 
 import javax.inject.Inject;
@@ -52,6 +53,10 @@ public class MainActivity extends BaseActivity {
         setBackArrow();
 
         initViews();
+
+
+
+
     }
 
     private void initViews() {
@@ -71,7 +76,7 @@ public class MainActivity extends BaseActivity {
             public void onItemClick(View view, int position) {
                 switch (position) {
                     case 0:
-                        StudentComponent studentComponent = DaggerStudentComponent.builder().courseModule(new CourseModule()).build();
+                        StudentComponent studentComponent = DaggerStudentComponent.builder().build();
                         studentComponent.inject(MainActivity.this);
                         mStudentFactory = studentComponent.maker();
                         mStudent = mStudentFactory.getStudent();
@@ -89,6 +94,12 @@ public class MainActivity extends BaseActivity {
                     case 1:
                         showToolBar();
                         Logger.d(position);
+                        Snackbar.make(view, "SHOW SDCARD PATH", Snackbar.LENGTH_SHORT).setAction("OK", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                Toast.makeText(MainActivity.this, Dagger2Application.getAppComponent().getApplication().getFilesDir().getAbsolutePath(), Toast.LENGTH_SHORT).show();
+                            }
+                        }).show();
                         break;
                     default:
                         break;

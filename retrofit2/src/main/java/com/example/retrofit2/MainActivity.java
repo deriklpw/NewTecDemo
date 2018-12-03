@@ -11,12 +11,20 @@ import android.view.View;
 import com.example.common.activity.BaseActivity;
 import com.example.common.adapter.ItemDividerHorizontal;
 import com.example.common.adapter.RecycleViewAdapter;
+import com.example.retrofit2.bean.MangGuoBean;
+import com.example.retrofit2.bean.WeatherBean;
+import com.google.gson.Gson;
 import com.orhanobut.logger.Logger;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.observers.DisposableObserver;
+import io.reactivex.schedulers.Schedulers;
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -29,10 +37,18 @@ public class MainActivity extends BaseActivity {
     private static final String TAG = MainActivity.class.getName();
     private String[] mTargetNames = new String[]{
             "get",
-            "post"
+            "post",
+            "Retrofit, Rxjava",
+            "MangGuo Get",
+            "MangGuo Post"
     };
 
     private RecycleViewAdapter mAdapter;
+    private WeatherService weatherService;
+    private ManggoService manggoService;
+    private MangGuoBean.ParamBean.PBean pBean;
+    private MangGuoBean.ParamBean.VBeanX vBean;
+    private String path;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +100,7 @@ public class MainActivity extends BaseActivity {
                     case 1:
                         Retrofit retrofit2 = new Retrofit.Builder()
                                 .baseUrl("http://v.juhe.cn/")
+                                .client(OkHttpClientUtils.getClient())
                                 .addConverterFactory(GsonConverterFactory.create())
                                 .build();
                         Api api2 = retrofit2.create(Api.class);
@@ -105,6 +122,98 @@ public class MainActivity extends BaseActivity {
 
                             }
                         });
+                        break;
+                    case 2:
+                        if (weatherService == null) {
+                            weatherService = RetrofitServiceManager.getInstance().create(BaseUrl.WEATHER_URL, WeatherService.class);
+                        }
+                        Map<String, String> params1 = new HashMap<>();
+                        params1.put("format","1");
+                        params1.put("cityname", "上海");
+                        params1.put("key", "8b6f1ed54dfaf42cc7b89644afdfff2e");
+
+                        weatherService.getWeather(params1)
+                                .subscribeOn(Schedulers.io())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(new DisposableObserver<WeatherBean>() {
+                                    @Override
+                                    public void onNext(WeatherBean weatherBean) {
+                                        String info = weatherBean.getResult().getToday().getWeather();
+                                        Logger.d("onNext:  上海天气：" + info);
+                                    }
+
+                                    @Override
+                                    public void onError(Throwable e) {
+                                        Logger.d("onError");
+                                    }
+
+                                    @Override
+                                    public void onComplete() {
+                                        Logger.d("onComplete");
+                                    }
+                                });
+
+                        break;
+
+                    case 3:
+                        if (manggoService == null) {
+                            manggoService = RetrofitServiceManager.getInstance().create(BaseUrl.MANG_GUO_URL, ManggoService.class);
+                        }
+
+                        Map<String, String> manggo_params = new HashMap<>();
+                        manggo_params.put("cxid","6778_zm_0");
+                        manggo_params.put("plan", "201847");
+                        manggo_params.put("ip", "119.137.55.195");
+                        manggo_params.put("platform", "phone");
+
+                        manggoService.getAdApi(manggo_params)
+                                .subscribeOn(Schedulers.io())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(new DisposableObserver<MangGuoBean>() {
+                                    @Override
+                                    public void onNext(MangGuoBean mangGuoBean) {
+                                        path = mangGuoBean.getPath();
+                                        Logger.d("onNext: "+ path);
+                                        pBean = mangGuoBean.getParam().getP();
+                                        vBean = mangGuoBean.getParam().getV();
+                                    }
+
+                                    @Override
+                                    public void onError(Throwable e) {
+                                        Logger.d("onError:" + e.toString());
+                                    }
+
+                                    @Override
+                                    public void onComplete() {
+                                        Logger.d("onComplete");
+                                    }
+                                });
+                        break;
+                    case 4:
+                        Gson gson = new Gson();
+                        OkHttpClientUtils okHttpClientUtils = OkHttpClientUtils.getInstance();
+                        String jsonPBean = gson.toJson(pBean);
+                        String jsonVBean = gson.toJson(vBean);
+                        Logger.d("p=" + jsonPBean);
+                        Logger.d("v=" + jsonVBean);
+                        FormBody formBody = new FormBody.Builder()
+                                .add("p",jsonPBean)
+                                .add("v",jsonVBean)
+                                .build();
+
+                        okHttpClientUtils.postFormBody(path, formBody , new okhttp3.Callback() {
+                            @Override
+                            public void onFailure(okhttp3.Call call, IOException e) {
+                                Logger.d("onFailure");
+                            }
+
+                            @Override
+                            public void onResponse(okhttp3.Call call, okhttp3.Response response) throws IOException {
+                                Logger.d("response="+response.body().string());
+
+                            }
+                        });
+
                         break;
                     default:
                         break;

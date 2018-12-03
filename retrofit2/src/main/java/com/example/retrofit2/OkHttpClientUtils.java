@@ -1,4 +1,4 @@
-package com.example.okhttp;
+package com.example.retrofit2;
 
 import com.example.common.utils.AESCryptUtils;
 import com.google.gson.Gson;
@@ -25,6 +25,7 @@ import okhttp3.Response;
  */
 public class OkHttpClientUtils {
     private static OkHttpClient client;
+    private static OkHttpClientUtils instance;
 
     private OkHttpClientUtils() {
         client = new OkHttpClient.Builder()
@@ -33,8 +34,18 @@ public class OkHttpClientUtils {
                 .build();
     }
 
-    public static OkHttpClientUtils getClient() {
-        return new OkHttpClientUtils();
+    public static OkHttpClient getClient() {
+        if (instance == null) {
+            instance = new OkHttpClientUtils();
+        }
+        return client;
+    }
+
+    public static OkHttpClientUtils getInstance() {
+        if (instance == null) {
+            instance = new OkHttpClientUtils();
+        }
+        return instance;
     }
 
     public void get(String url, Callback callback) {
@@ -46,18 +57,15 @@ public class OkHttpClientUtils {
         client.newCall(new Request.Builder().url(url).post(formBody).build()).enqueue(callback);
     }
 
-    //把RequestBody暴露给外面，按需设置
     public void postRequsetBody(String url, RequestBody requestBody, Callback callback) {
         client.newCall(new Request.Builder().url(url).post(requestBody).build()).enqueue(callback);
     }
 
-    //RequestBody用来发送Json数据
     public void postJson(String url, String json, Callback callback) {
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json);
         client.newCall(new Request.Builder().url(url).post(requestBody).build()).enqueue(callback);
     }
 
-    //RequestBody用来发送单个文件
     public void postFile(String url, File file, Callback callback){
         RequestBody requestBody = RequestBody.create(MediaType.parse("file/*"), file);
         client.newCall(new Request.Builder().url(url).post(requestBody).build()).enqueue(callback);
@@ -68,8 +76,8 @@ public class OkHttpClientUtils {
         public Response intercept(Chain chain) throws IOException {
             Request originalRequest = chain.request();
             Request newRequest = originalRequest.newBuilder()
-                    .addHeader("Content-Type", "application/json; charset=utf-8")
                     .addHeader("Accept-Encoding", "gzip")
+                    .addHeader("Content-Type", "application/json; charset=utf-8")
                     .addHeader("Accept-Charset", "utf-8")
                     .build();
 

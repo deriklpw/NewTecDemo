@@ -5,7 +5,6 @@ import com.example.dagger2.bean.StudentFactory;
 import com.example.dagger2.module.CourseModule;
 import com.example.dagger2.module.StudentModule;
 
-import dagger.BindsInstance;
 import dagger.Component;
 
 /**
@@ -15,14 +14,13 @@ import dagger.Component;
  */
 @Component(modules = {StudentModule.class, CourseModule.class})
 public interface StudentComponent {
+    void inject(MainActivity mainActivity);
     StudentFactory maker();
-    void inject(MainActivity activity);
-
-    @Component.Builder
-    interface Builder {
-        @BindsInstance
-        Builder courseModule(CourseModule courseModule);
-        StudentComponent build();
-    }
+//    @Component.Builder
+//    interface Builder {
+//        @BindsInstance
+//        Builder courseModule(CourseModule courseModule);
+//        StudentComponent build();
+//    }
 
 }
